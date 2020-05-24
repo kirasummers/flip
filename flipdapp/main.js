@@ -1,7 +1,8 @@
 var web3 = new Web3(Web3.givenProvider);
 var contractInstance;
-var contractAddress = "0x85d7122496dE5629B933D049Af42813169FE56CA";
+var contractAddress = "0xa0881795304615b8568e283BBBC5AF21CD775fb5";
 var winState;
+var gameStake = 1000000;
 
 
 $(document).ready(function() {
@@ -20,7 +21,8 @@ function playGame(){
 
   //play the gameplay
   var config = {
-    value: 1000000
+    value: gameStake,
+    game_stake: gameStake,
   }
 
   console.log("\nPlaying game...\n");
@@ -30,7 +32,7 @@ function playGame(){
     console.log("Win state was "+winState);
   })
   //update the outputs
-  
+
 }
 
 
@@ -57,15 +59,13 @@ function whatever(){
 function setStake(){
   var newStake = $("#stake_value").val();
   // Set stake value and update page
-  contractInstance.methods.setStake(newStake).send(newStake).then(function(){
     console.log("Set new stake to "+newStake+" wei");
+    gameStake = newStake;
     updateStake();
-  });
+
 }
 function updateStake(){
   // fetch and display data
-  contractInstance.methods.getStake().call().then(function(stake){
-    $("#currentStake").text(stake);
-    console.log("current stake is set to "+stake+" wei");
-  });
+  $("#currentStake").text(gameStake);
+  console.log("current stake is set to "+gameStake+" wei");
 }

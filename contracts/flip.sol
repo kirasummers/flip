@@ -4,16 +4,10 @@ import "./ownable.sol";
 contract flip is Ownable {
 
   uint public balance; //holds account balance
-  uint public game_stake = 1000000; // default stake
 
   address payable public player; //holds address of the player
 
-  modifier costs(uint cost){
-      require(msg.value >= cost);
-      _;
-  }
-
-  function playGame() public payable costs(game_stake) returns (bool){
+  function playGame(uint game_stake) public payable returns (bool){
     bool win;
     uint winnings = game_stake *2;
 
@@ -33,17 +27,6 @@ contract flip is Ownable {
     }
 
     return win;
-  }
-
-
-  // getter for game stake vavlue
-  function getStake() public view returns (uint){
-      return game_stake;
-  }
-
-  // setter for game stake vavlue
-  function setStake(uint newStake) public {
-      game_stake= newStake;
   }
 
   //empty balance to owner account
