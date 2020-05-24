@@ -1,154 +1,38 @@
 var web3 = new Web3(Web3.givenProvider);
 var contractInstance;
 var contractAddress = "0x85d7122496dE5629B933D049Af42813169FE56CA";
-
-var abi = [
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "balance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "game_stake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "player",
-    "outputs": [
-      {
-        "internalType": "address payable",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "playGame",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "getStake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "newStake",
-        "type": "uint256"
-      }
-    ],
-    "name": "setStake",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "withdrawAll",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "function"
-  }
-];
+var winState;
 
 
 $(document).ready(function() {
     window.ethereum.enable().then(function(accounts){
       contractInstance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]});
+      console.log("contract instance was ");
       console.log(contractInstance);
+      updateStake();
     });
     $("#setStake").click(setStake);
-    $("#play").click(playDaGame);
+    $("#play").click(playGame);
 });
 
 // adds data from form
-function playDaGame(){
+function playGame(){
 
   //play the gameplay
   var config = {
     value: 1000000
   }
-  contractInstance.methods.playGame().send(config);
 
-
-
+  console.log("\nPlaying game...\n");
+  winsState=contractInstance.methods.playGame().send(config)
+  .on("transactionHash", function (hash){
+    console.log("hash of confirmed transaction was :" + hash);
+    console.log("Win state was "+winState);
+  })
   //update the outputs
-
+  
 }
+
 
 function whatever(){
     var name = $("#name_input").val();
@@ -170,11 +54,18 @@ function whatever(){
     })
 }
 
-function fetchAndDisplay(){
+function setStake(){
+  var newStake = $("#stake_value").val();
+  // Set stake value and update page
+  contractInstance.methods.setStake(newStake).send(newStake).then(function(){
+    console.log("Set new stake to "+newStake+" wei");
+    updateStake();
+  });
+}
+function updateStake(){
   // fetch and display data
-  contractInstance.methods.getPerson().call().then(function(res){
-    $("#name_output").text(res.name);
-    $("#age_output").text(res.age);
-    $("#height_output").text(res.height);
-  })
+  contractInstance.methods.getStake().call().then(function(stake){
+    $("#currentStake").text(stake);
+    console.log("current stake is set to "+stake+" wei");
+  });
 }
