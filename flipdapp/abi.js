@@ -46,13 +46,7 @@ var abi = [
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "game_stake",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "playGame",
     "outputs": [
       {

@@ -7,12 +7,14 @@ contract flip is Ownable {
 
   address payable public player; //holds address of the player
 
-  function playGame(uint game_stake) public payable returns (bool){
+  event returnWin(address indexed _from, bool win);
+
+  function playGame() public payable returns (bool){
     bool win;
-    uint winnings = game_stake *2;
+    uint winnings;
 
-    require(msg.value >= game_stake);
-
+    uint game_stake = msg.value;
+    winnings = game_stake *2;
     player = msg.sender ;
 
     // get win state
@@ -28,6 +30,7 @@ contract flip is Ownable {
         balance += game_stake;
     }
 
+    emit returnWin(msg.sender, win);
     return win;
   }
 

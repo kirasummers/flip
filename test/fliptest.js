@@ -17,7 +17,7 @@ contract("flip", async function(accounts){
     let oldBalance = parseFloat(await instance.balance());
     let oldAccountBalance = parseFloat(await web3.eth.getBalance(instance.address));
 
-    await instance.playGame(game_stake, {from: accounts[1], value: game_stake});
+    await instance.playGame({from: accounts[1], value: game_stake});
 
     let newBalance = parseFloat(await instance.balance());
     let newAccountBalance =parseFloat(await web3.eth.getBalance(instance.address));
@@ -28,7 +28,7 @@ contract("flip", async function(accounts){
 
   // check check withdraw all removes all money and that it ends up in owner wallet.
   it("should withdraw funds correctly", async function(){
-    await instance.playGame(game_stake, {from: accounts[1], value: game_stake});
+    await instance.playGame({from: accounts[1], value: game_stake});
 
     let oldBalance = parseFloat(await instance.balance());
     let oldAccountBalance = parseFloat(await web3.eth.getBalance(instance.address));
