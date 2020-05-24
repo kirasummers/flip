@@ -3,13 +3,12 @@ const truffleAssert = require("truffle-assertions");
 
 contract("flip", async function(accounts){
   let instance;
-  var game_stake;
+  var game_stake=1000000;
 
   // functions before, beforeeach, after and after each help when running tests, to set up before.
 
   before (async function(){
     instance = await flip.deployed();
-    game_stake = await instance.game_stake();
   });
 
   // check check withdraw all removes all money and that it ends up in owner wallet.
@@ -18,18 +17,18 @@ contract("flip", async function(accounts){
     let oldBalance = parseFloat(await instance.balance());
     let oldAccountBalance = parseFloat(await web3.eth.getBalance(instance.address));
 
-    await instance.playGame({from: accounts[1], value: game_stake});
+    await instance.playGame(game_stake, {from: accounts[1], value: game_stake});
 
     let newBalance = parseFloat(await instance.balance());
     let newAccountBalance =parseFloat(await web3.eth.getBalance(instance.address));
 
-    assert(newBalance == (oldBalance + await instance.game_stake()), "local balance did add stake after gameplay");
-    assert(newAccountBalance ==(oldAccountBalance + await instance.game_stake()), "onChain balance did add stake after gameplay");
+    assert(newBalance == (oldBalance + game_stake), "local balance did add stake after gameplay");
+    assert(newAccountBalance ==(oldAccountBalance + game_stake), "onChain balance did add stake after gameplay");
   });
 
   // check check withdraw all removes all money and that it ends up in owner wallet.
   it("should withdraw funds correctly", async function(){
-    await instance.playGame({from: accounts[1], value: game_stake});
+    await instance.playGame(game_stake, {from: accounts[1], value: game_stake});
 
     let oldBalance = parseFloat(await instance.balance());
     let oldAccountBalance = parseFloat(await web3.eth.getBalance(instance.address));

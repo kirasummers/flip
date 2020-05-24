@@ -11,6 +11,8 @@ contract flip is Ownable {
     bool win;
     uint winnings = game_stake *2;
 
+    require(msg.value >= game_stake);
+
     player = msg.sender ;
 
     // get win state

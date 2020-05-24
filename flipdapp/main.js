@@ -1,6 +1,6 @@
 var web3 = new Web3(Web3.givenProvider);
 var contractInstance;
-var contractAddress = "0xa0881795304615b8568e283BBBC5AF21CD775fb5";
+var contractAddress = "0x6B42E7772b964dc55E12AcBf322C5D505c85d137";
 var winState;
 var gameStake = 1000000;
 
@@ -13,20 +13,19 @@ $(document).ready(function() {
       updateStake();
     });
     $("#setStake").click(setStake);
-    $("#play").click(playGame);
+    $("#play").click(playTheGame);
 });
 
 // adds data from form
-function playGame(){
+function playTheGame(){
 
   //play the gameplay
   var config = {
-    value: gameStake,
-    game_stake: gameStake,
+    value: gameStake
   }
 
   console.log("\nPlaying game...\n");
-  winsState=contractInstance.methods.playGame().send(config)
+  winsState=contractInstance.methods.playGame(gameStake).send(config)
   .on("transactionHash", function (hash){
     console.log("hash of confirmed transaction was :" + hash);
     console.log("Win state was "+winState);
