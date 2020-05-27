@@ -10,9 +10,17 @@ $(document).ready(function() {
       contractInstance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]});
       console.log("contract instance was ");
       console.log(contractInstance);
-      setStake();
-      updateStake();
+
+      //set up a win-lose event listener for the event raised on game win/lose
+      var winLoseEvent = contractInstance.returnWin({_from: web3.eth.coinbase});
+      winLoseEvent.watch(function(err, result) {
+        if (err)console.log(err);
+        else console.log("\nwin/lose was: "+ result.args.win);
+        winState = result.args.win;
+      });
     });
+    setStake();
+    updateStake();
     $("#winlose").text("haven't played yet!");
     $("#setStake").click(setStake);
     $("#play").click(playTheGame);
@@ -27,7 +35,7 @@ function playTheGame(){
   }
 
   console.log("\nPlaying game...\n");
-  winsState=contractInstance.methods.playGame().send(config)
+  contractInstance.methods.playGame().send(config)
   .on("transactionHash", function (hash){
     console.log("hash of confirmed transaction was :" + hash);
     console.log("Win state was "+winState);
