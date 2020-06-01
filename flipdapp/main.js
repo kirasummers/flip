@@ -38,33 +38,12 @@ async function playTheGame(){
     await contractInstance.getPastEvents(['returnWin'], {fromBlock: 'latest', toBlock: 'latest'},
       async (err, events) => {
       console.log("result of win event was" +events[events.length-1].returnValues.win);
+      console.log(events[events.length-1]);
     });
  });
 
 }
 
-
-function whatever(){
-    var name = $("#name_input").val();
-    var age= Number($("#age_input").val());
-    var height= Number($("#height_input").val());
-
-    var config = {
-      value: web3.utils.toWei("1", "ether")
-    }
-    contractInstance.methods.createPerson(name, age, height).send(config)
-    .on("transactionHash", function (hash){
-      console.log("hash of confirmed transaction was :" + hash);
-    })
-    .on("confirmation", function(confirmationNr){
-      console.log("Confirmation number: "+confirmationNr);
-    })
-    .on("reciept", function(receipt){
-      console.log("receipt received: "+ receipt);
-    })
-
-
-}
 
 function setStake(){
   var newStake = $("#stake_value").val();
