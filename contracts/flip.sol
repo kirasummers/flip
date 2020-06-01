@@ -9,7 +9,11 @@ contract flip is Ownable {
 
   event returnWin(address indexed _from, bool win);
 
-  function playGame() public payable returns (bool){
+  function playGame()
+  public
+  payable
+  returns (bool)
+  {
     bool win;
     uint winnings;
 
@@ -35,7 +39,12 @@ contract flip is Ownable {
   }
 
   //empty balance to owner account
-  function withdrawAll() public payable onlyOwner returns(uint) {
+  function withdrawAll()
+  public
+  payable
+  onlyOwner
+  returns(uint)
+  {
        uint toTransfer = balance;
        balance = 0;
        msg.sender.transfer(toTransfer);
@@ -43,7 +52,11 @@ contract flip is Ownable {
    }
 
   // 50/50 chance will return bool of true or false
-  function getFlip() private view returns (bool) {
+  function getFlip()
+  private
+  view
+  returns (bool)
+  {
    if (now % 2 == 1 ) return true;
     else return false;
   }

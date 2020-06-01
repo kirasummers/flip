@@ -10,24 +10,19 @@ $(document).ready(function() {
       contractInstance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]});
       console.log("contract instance was ");
       console.log(contractInstance);
-
-      //set up a win-lose event listener for the event raised on game win/lose
-      var winLoseEvent = contractInstance.returnWin({_from: web3.eth.coinbase});
-      winLoseEvent.watch(function(err, result) {
-        if (err)console.log(err);
-        else console.log("\nwin/lose was: "+ result.args.win);
-        winState = result.args.win;
-      });
     });
     setStake();
     updateStake();
-    $("#winlose").text("haven't played yet!");
+    $("#winlose").text("You have not played yet!");
     $("#setStake").click(setStake);
     $("#play").click(playTheGame);
 });
 
+
+
+
 // adds data from form
-function playTheGame(){
+async function playTheGame(){
 
   //play the gameplay
   var config = {
@@ -36,12 +31,15 @@ function playTheGame(){
 
   console.log("\nPlaying game...\n");
   contractInstance.methods.playGame().send(config)
-  .on("transactionHash", function (hash){
-    console.log("hash of confirmed transaction was :" + hash);
-    console.log("Win state was "+winState);
-  })
-  //update the outputs
+  .on("transactionHash", async function (hash){
+      console.log("hash of confirmed transaction was :" + hash);
 
+    //update the outputs
+    await contractInstance.getPastEvents(['returnWin'], {fromBlock: 'latest', toBlock: 'latest'},
+      async (err, events) => {
+      console.log("result of win event was" +events[events.length-1].returnValues.win);
+    });
+ });
 
 }
 
@@ -64,6 +62,8 @@ function whatever(){
     .on("reciept", function(receipt){
       console.log("receipt received: "+ receipt);
     })
+
+
 }
 
 function setStake(){
